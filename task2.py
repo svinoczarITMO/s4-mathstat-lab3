@@ -40,23 +40,23 @@ def sample_median(square):
     
 def calculations():
     data_map = {}
-    species = {"Total": [iris['sepal_square'], iris['petal_square']], "Setosa": [setosa['sepal_square'], setosa['petal_square']],
-               "Versicolor": [versicolor['sepal_square'], versicolor['petal_square']], "Virginica": [virginica['sepal_square'], virginica['petal_square']]}
+    species = {"Total": [iris['total_square']], "Setosa": [setosa['total_square']],
+               "Versicolor": [versicolor['total_square']], "Virginica": [virginica['total_square']]}
     
     for spec in species:
-        sepal_square, petal_square = species[spec][0], species[spec][1]    
-        sepal_sample_avg, petal_sample_avg = round(sample_average(sepal_square), 4), round(sample_average(petal_square), 4)
-        sepal_sample_var, petal_sample_var = str(round(sample_variance(sepal_square, sepal_sample_avg), 4)), str(round(sample_variance(petal_square, petal_sample_avg), 4))
-        sepal_sample_median, petal_sample_median = str(round(sample_median(sepal_square), 4)), str(round(sample_median(petal_square), 4))
-        sepal_sample_quantile, petal_sample_quantile = str(round(numpy.quantile(sepal_square, 0.4), 4)), str(round(numpy.quantile(petal_square, 0.4), 4))
-        data_map[spec] = [str(sepal_sample_avg), str(petal_sample_avg), sepal_sample_var, petal_sample_var, sepal_sample_median, petal_sample_median, sepal_sample_quantile, petal_sample_quantile]
-
+        square = species[spec][0]
+        average = sample_average(square)
+        variance = sample_variance(square, average)
+        median = sample_median(square)
+        quantile = str(numpy.quantile(square, 0.4))
+        data_map[spec] = [str(average), str(variance), str(median), str(quantile)]
+        
     return data_map
 
 def tables_output():
     values = calculations()
     species_count = {"Setosa": len(setosa), "Versicolor": len(versicolor), "Virginica": len(virginica)}
-    data = [["SPECIES", "SEPAL AVERAGE", "PETAL AVERAGE", "SEPAL VARIANCE", "PETAL VARIANCE", "SEPAL MEDIAN", "PETAL MEDIAN", "SEPAL QUANTILE", "PETAL QUANTILE"]]
+    data = [["SPECIES", "AVERAGE", "VARIANCE", "MEDIAN", "QUANTILE (0.4)"]]
     min_max_data = [["SPECIES", "COUNT"]]
     
     for spec in values:
@@ -66,11 +66,11 @@ def tables_output():
         count = [str(species_count[spec])]
         min_max_data.append([spec] + count)
     
-    print("\n")
+    print()
     pretty_print.print_pretty_table(min_max_data)
-    print("\n\n")
+    print()
     pretty_print.print_pretty_table(data)
-    print("\n")
+    print()
 
 def plot_all():
     fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(15, 5))
