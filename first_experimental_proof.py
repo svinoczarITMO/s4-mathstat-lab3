@@ -5,13 +5,14 @@ from scipy.stats import gamma
 shape = 2
 scale = 1
 
-samples_size = 100
+samples_size = 30
 
 count_of_samples = 1000
 samples_statistics = numpy.zeros(count_of_samples)
 
 for i in range(count_of_samples):
     sample = numpy.random.normal(2, 2, samples_size)
+    numpy.sort(sample)
     samples_statistics[i] = sample[1]/numpy.mean(sample)
     
 plt.hist(samples_statistics, bins=30, density=True, color='blue', label='nF(X_(2))')
