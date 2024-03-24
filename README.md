@@ -1,1 +1,1 @@
-# -Math_stistic
+# -Math_statistic
