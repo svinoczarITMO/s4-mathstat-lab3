@@ -1,35 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm
 
-# Параметры априорного распределения
-mu = 0
-b = 1
+def grade(samples, n):
+    thetas, bias, vars, mses = [0] * n, [0] * n, [0] * n, [0] * n
+    for i in range(n):
+        thetas[i] = (np.sqrt(3*np.var(samples[i])))
+        bias[i] = abs(thetas[i] - 10)
+        vars[i] = abs(np.var(samples[i]) - np.var(samples, ddof=1))
+        mses[i] = np.mean((thetas[i]-10)**2)
+    mle_thetas = [thetas[i] for i in range(n)]
+    return thetas, bias, vars, mses, tuple(mle_thetas)
 
-# Параметры выборки
-n_samples = 1000
-sample_size = 10
-delta = 1
-
-# Генерация выборок и вычисление байесовских оценок
-bayesian_estimates = []
-for _ in range(n_samples):
-    # Генерация выборки
-    sample = np.random.normal(loc=mu, scale=delta, size=sample_size)
+mse_mles = []
+for n in range(100, 1001, 100):
+    samples = np.random.uniform(low=-10, high=10, size=(n, 100))
+    thetas, bias, vars, mses, mle_thetas = grade(samples, n)
     
-    # Вычисление параметров апостериорного распределения
-    posterior_mu = (mu / (b ** 2) + np.mean(sample) / (delta ** 2)) / (1 / (b ** 2) + sample_size / (delta ** 2))
-    posterior_sigma = np.sqrt(1 / (1 / (b ** 2) + sample_size / (delta ** 2)))
+    mse_mles.append(np.mean((mle_thetas - 10)**2))
     
-    # Вычисление байесовской оценки (моды апостериорного распределения)
-    bayesian_estimate = posterior_mu
-    bayesian_estimates.append(bayesian_estimate)
-
-# Визуализация распределения байесовских оценок
-plt.figure(figsize=(10, 6))
-plt.hist(bayesian_estimates, bins=30, density=True, color='skyblue', edgecolor='black', alpha=0.7)
-plt.title('Распределение байесовских оценок параметра $\\theta$')
-plt.xlabel('Значение параметра $\\theta$')
-plt.ylabel('Плотность вероятности')
-plt.grid(True)
-plt.show()
+print("MSE for MLE estimates: ", np.mean(mse_mles))
