@@ -1,17 +1,19 @@
 import numpy as np
 from scipy.stats import norm
 
-data_samples = np.random.normal(loc=0, scale=1, size=100)
+mu_prior = 0
+sigma_prior = 1
 
-def likelihood(theta, data):
-    likelihoods = [norm.pdf(x, loc=theta, scale=1) for x in data]
-    return np.prod(likelihoods)
+data_samples = np.random.normal(loc=10, scale=1, size=100)
 
 def prior(theta):
-    return norm.pdf(theta, loc=0, scale=1)
+    return norm.pdf(theta, loc=mu_prior, scale=sigma_prior)
+
+def likelihood(theta, data):
+    return np.prod(norm.pdf(data, loc=theta, scale=1))
 
 def posterior(theta, data):
-    return likelihood(theta, data) * prior(theta)
+    return prior(theta) * likelihood(theta, data)
 
 def normalize_posterior(theta_range, data):
     unnormalized_posterior = [posterior(theta, data) for theta in theta_range]
