@@ -27,6 +27,6 @@ def bayesian_estimate(theta_range, posterior):
 theta_range = np.linspace(-10, 10, 1000)
 
 normalized_posterior = normalize_posterior(theta_range, data_samples)
-
+print(data_samples)
 bayesian_theta_estimate = bayesian_estimate(theta_range, normalized_posterior)
 print("Байесовская оценка параметра theta:", bayesian_theta_estimate)
